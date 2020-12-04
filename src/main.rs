@@ -217,13 +217,11 @@ fn main() {
     let width = 128;
     let height = 40;
 
-    let frame = Frame::new(width, height, &IDLE3).unwrap();
-    println!("original size: {}", frame.output().len());
-    println!("compressed size: {}", frame.compress().len());
-    let diff = kyria_oled::diff(&IDLE1, &IDLE3);
-    let frame = Frame::new(width, height, &diff).unwrap();
-    println!("compressed size after diff: {}", frame.compress().len());
-    dbg!(frame.compress());
+    print_slice_as_c_array("BASE_FRAME", &IDLE1);
+    print_slice_as_c_array("IDLE1_TO_IDLE3", &compress(&diff(&IDLE1, &IDLE3)));
+    print_slice_as_c_array("IDLE3_TO_IDLE4", &compress(&diff(&IDLE3, &IDLE4)));
+    print_slice_as_c_array("IDLE4_TO_IDLE5", &compress(&diff(&IDLE4, &IDLE5)));
+    print_slice_as_c_array("IDLE5_TO_IDLE1", &compress(&diff(&IDLE4, &IDLE5)));
 
     /*
     let mut total = 0;
