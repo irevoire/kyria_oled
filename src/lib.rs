@@ -50,7 +50,7 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
     let mut intermediate = intermediate.chunks(2);
 
     while let Some(base) = intermediate.next() {
-        let (control, value) = (base[0], base[1]);
+        let (control, _value) = (base[0], base[1]);
 
         if control == 1 {
             // how much control byte are also worth 1
@@ -103,8 +103,17 @@ pub fn diff(base: &[u8], other: &[u8]) -> Vec<u8> {
         .collect()
 }
 
+/// uncompress and diff at the same time limiting the number of allocation to only the final vector
+pub fn uncompress_diff(current: &[u8], next: &[u8]) -> Vec<u8> {
+    current
+        .iter()
+        .zip(next)
+        .map(|(base, &other)| base.wrapping_sub(other))
+        .collect()
+}
+
 pub fn print_slice_as_c_array(varname: &str, v: &[u8]) {
-    println!("static char PROGMEM {}[{}] = {{", varname, v.len());
+    println!("static const char PROGMEM {}[{}] = {{", varname, v.len());
     let mut col = 0;
     for index in 0..v.len() - 1 {
         let tmp = format!("{}, ", v[index]);
@@ -123,6 +132,18 @@ pub fn print_slice_as_c_array(varname: &str, v: &[u8]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_diff() {
+        assert_eq!(
+            diff(&[1, 2, 3, 4, 5], &[1, 2, 5, 1, 2]),
+            &[0, 0, -2_i8 as u8, 3, 3]
+        );
+        assert_eq!(
+            diff(&[1, 2, 3, 4, 5], &[0, 0, -2_i8 as u8, 3, 3]),
+            &[1, 2, 5, 1, 2]
+        );
+    }
 
     #[test]
     fn test_compress() {

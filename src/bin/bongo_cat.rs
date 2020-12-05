@@ -1,3 +1,4 @@
+/// this frame is supposed to be repeated twice when cycling on the animation
 const IDLE1: [u8; 636] = [
     0, 0, 126, 126, 24, 60, 102, 66, 0, 12, 28, 112, 112, 28, 12, 0, 116, 116, 20, 20, 124, 104, 0,
     124, 124, 0, 112, 120, 44, 36, 124, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -24,32 +25,7 @@ const IDLE1: [u8; 636] = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 8, 8, 23, 0, 15, 1, 2, 1, 15, 0, 15, 2, 5, 8,
 ];
-const IDLE2: [u8; 636] = [
-    0, 0, 126, 126, 24, 60, 102, 66, 0, 12, 28, 112, 112, 28, 12, 0, 116, 116, 20, 20, 124, 104, 0,
-    124, 124, 0, 112, 120, 44, 36, 124, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 128, 64, 64, 32, 32, 32, 32, 16, 16, 16, 16, 16, 8, 8, 4, 4, 4, 8, 48,
-    64, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 128, 128, 0, 0, 0, 0, 192, 96, 48, 24,
-    12, 132, 198, 98, 35, 51, 17, 145, 113, 241, 113, 145, 17, 51, 35, 98, 198, 132, 12, 24, 48,
-    96, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 100, 130, 2, 2, 2, 2, 2, 1,
-    0, 0, 0, 0, 128, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 0, 48, 48, 0, 192, 193, 193, 194, 4, 8,
-    16, 32, 64, 128, 0, 0, 0, 128, 128, 128, 128, 64, 64, 64, 64, 32, 32, 32, 32, 16, 16, 16, 16,
-    8, 8, 8, 8, 8, 196, 4, 196, 4, 196, 2, 194, 2, 194, 1, 1, 1, 1, 0, 0, 0, 0, 0, 252, 15, 1, 0,
-    248, 14, 31, 109, 140, 148, 148, 164, 166, 249, 224, 255, 224, 249, 166, 164, 148, 148, 140,
-    109, 31, 14, 248, 0, 1, 15, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 192, 56, 4, 3, 0,
-    0, 0, 0, 0, 0, 0, 12, 12, 12, 13, 1, 0, 64, 160, 33, 34, 18, 17, 17, 17, 9, 8, 8, 8, 8, 4, 4,
-    8, 8, 16, 16, 16, 16, 16, 17, 15, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    170, 170, 255, 255, 195, 191, 127, 3, 127, 191, 195, 255, 255, 170, 170, 0, 0, 0, 0, 0, 0, 31,
-    120, 192, 0, 15, 56, 124, 219, 152, 20, 20, 18, 50, 207, 3, 255, 3, 207, 50, 18, 20, 20, 152,
-    219, 124, 56, 15, 0, 192, 120, 31, 16, 16, 16, 16, 8, 8, 8, 8, 8, 4, 4, 4, 4, 4, 2, 3, 2, 2, 1,
-    1, 1, 1, 1, 1, 2, 2, 4, 4, 8, 8, 8, 8, 8, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 130, 135, 31, 7,
-    159, 7, 28, 7, 159, 7, 159, 7, 2, 130, 0, 0, 0, 0, 32, 16, 16, 16, 17, 11, 14, 12, 24, 16, 49,
-    35, 98, 102, 68, 68, 71, 71, 71, 68, 68, 102, 98, 35, 49, 16, 24, 12, 6, 3, 1, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 8, 8, 23, 0, 15, 1, 2, 1, 15, 0, 15, 2, 5, 8,
-];
+
 const IDLE3: [u8; 636] = [
     0, 0, 126, 126, 24, 60, 102, 66, 0, 12, 28, 112, 112, 28, 12, 0, 116, 116, 20, 20, 124, 104, 0,
     124, 124, 0, 112, 120, 44, 36, 124, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -76,6 +52,7 @@ const IDLE3: [u8; 636] = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 8, 8, 23, 0, 15, 1, 2, 1, 15, 0, 15, 2, 5, 8,
 ];
+
 const IDLE4: [u8; 636] = [
     0, 0, 126, 126, 24, 60, 102, 66, 0, 12, 28, 112, 112, 28, 12, 0, 116, 116, 20, 20, 124, 104, 0,
     124, 124, 0, 112, 120, 44, 36, 124, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -102,6 +79,7 @@ const IDLE4: [u8; 636] = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 8, 8, 23, 0, 15, 1, 2, 1, 15, 0, 15, 2, 5, 8,
 ];
+
 const IDLE5: [u8; 636] = [
     0, 0, 126, 126, 24, 60, 102, 66, 0, 12, 28, 112, 112, 28, 12, 0, 116, 116, 20, 20, 124, 104, 0,
     124, 124, 0, 112, 120, 44, 36, 124, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -183,6 +161,7 @@ const TAP1: [u8; 636] = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 8, 8, 23, 0, 15, 1, 2,
     1, 15, 0, 15, 2, 5, 8,
 ];
+
 const TAP2: [u8; 636] = [
     0, 0, 126, 126, 24, 60, 102, 66, 0, 12, 28, 112, 112, 28, 12, 0, 116, 116, 20, 20, 124, 104, 0,
     124, 124, 0, 112, 120, 44, 36, 124, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -213,106 +192,31 @@ const TAP2: [u8; 636] = [
 
 use kyria_oled::*;
 
+// after a lot of tests, with my compression function I found the most memory efficient way to
+// store the frames is to use the IDLE4 frame as a base and then save the difference between the
+// IDLE4 frame and the others
 fn main() {
-    let width = 128;
-    let height = 40;
+    let base = IDLE4;
 
-    let frame = &[
-        ("idle1", IDLE1),
-        ("idle2", IDLE2),
-        ("idle3", IDLE3),
-        ("idle4", IDLE4),
-        ("idle5", IDLE5),
-        ("prep", PREP),
-        ("tap1", TAP1),
-        ("tap2", TAP2),
-    ];
+    println!(
+        "static char PROGMEM CURRENT_FRAME[{}] = {{ 0 }};",
+        base.len()
+    );
 
-    for (name, frame) in frame {
-        let mut total = frame.len() * 2 - 10;
+    print_slice_as_c_array("BASE_FRAME", &base);
+    println!("#define IDLE4 BASE_FRAME");
+    print_slice_as_c_array("BASE_TO_IDLE1", &compress(&diff(&base, &IDLE1)));
+    println!(
+        "// We want to repeat the next frame twice so we are going to make a fake IDLE2 frame"
+    );
+    println!("#define BASE_TO_IDLE2 BASE_TO_IDLE1");
+    print_slice_as_c_array("BASE_TO_IDLE3", &compress(&diff(&base, &IDLE3)));
+    println!("// BASE_TO_IDLE4 frame is almost empty since IDLE4 is already used as the base");
+    print_slice_as_c_array("BASE_TO_IDLE4", &compress(&diff(&base, &IDLE4)));
+    print_slice_as_c_array("BASE_TO_IDLE5", &compress(&diff(&base, &IDLE5)));
 
-        print_slice_as_c_array("BASE_FRAME", frame);
-        total += &compress(&diff(frame, &IDLE1)).len();
-        print_slice_as_c_array("BASE_TO_IDLE3", &compress(&diff(frame, &IDLE1)));
-        total += &compress(&diff(frame, &IDLE3)).len();
-        print_slice_as_c_array("BASE_TO_IDLE3", &compress(&diff(frame, &IDLE3)));
-        total += &compress(&diff(frame, &IDLE4)).len();
-        print_slice_as_c_array("BASE_TO_IDLE4", &compress(&diff(frame, &IDLE4)));
-        total += &compress(&diff(frame, &IDLE5)).len();
-        print_slice_as_c_array("BASE_TO_IDLE5", &compress(&diff(frame, &IDLE5)));
+    print_slice_as_c_array("BASE_TO_PREP", &compress(&diff(&base, &PREP)));
 
-        total += &compress(&diff(frame, &PREP)).len();
-        print_slice_as_c_array("BASE_TO_PREP", &compress(&diff(frame, &PREP)));
-
-        total += &compress(&diff(frame, &TAP1)).len();
-        print_slice_as_c_array("BASE_TO_TAP1", &compress(&diff(frame, &TAP1)));
-        total += &compress(&diff(frame, &TAP2)).len();
-        print_slice_as_c_array("BASE_TO_TAP2", &compress(&diff(frame, &TAP2)));
-
-        println!("{} total used bytes with the base frame {}", total, name);
-    }
-
-    /*
-    print_slice_as_c_array("BASE_FRAME", &IDLE1);
-    print_slice_as_c_array("IDLE1_TO_IDLE3", &compress(&diff(&IDLE1, &IDLE3)));
-    print_slice_as_c_array("IDLE3_TO_IDLE4", &compress(&diff(&IDLE3, &IDLE4)));
-    print_slice_as_c_array("IDLE4_TO_IDLE5", &compress(&diff(&IDLE4, &IDLE5)));
-    print_slice_as_c_array("IDLE5_TO_IDLE1", &compress(&diff(&IDLE5, &IDLE1)));
-
-    print_slice_as_c_array("IDLE1_TO_PREP", &compress(&diff(&IDLE1, &PREP)));
-    print_slice_as_c_array("IDLE3_TO_PREP", &compress(&diff(&IDLE3, &PREP)));
-    print_slice_as_c_array("IDLE4_TO_PREP", &compress(&diff(&IDLE4, &PREP)));
-    print_slice_as_c_array("IDLE5_TO_PREP", &compress(&diff(&IDLE5, &PREP)));
-
-    print_slice_as_c_array("PREP_TO_TAP1", &compress(&diff(&PREP, &TAP1)));
-
-    print_slice_as_c_array("TAP1_TO_TAP2", &compress(&diff(&TAP1, &TAP2)));
-    print_slice_as_c_array("TAP2_TO_TAP1", &compress(&diff(&TAP2, &TAP1)));
-
-    print_slice_as_c_array("TAP1_TO_PREP", &compress(&diff(&TAP1, &PREP)));
-    print_slice_as_c_array("TAP2_TO_PREP", &compress(&diff(&TAP2, &PREP)));
-    */
-
-    /*
-    let mut total = 0;
-
-    for f in &[IDLE1, IDLE2, IDLE3, IDLE4, IDLE5] {
-        let frame = Frame::new(width, height, f).unwrap();
-        println!("original size: {}", f.len());
-        println!("original size from frame: {}", frame.output().len());
-        println!("compressed size: {}", frame.compress().len());
-        total += f.len() - frame.compress().len();
-    }
-    println!();
-    println!("total bytes gained {}", total);
-
-
-
-        let idle = vec![IDLE1, IDLE2, IDLE3, IDLE4, IDLE5];
-        let idle = idle.iter().cycle();
-
-        let tap = vec![TAP1, TAP2];
-        let tap = tap.iter().cycle();
-
-        let prep = std::iter::repeat(&PREP);
-
-        let anim = std::iter::empty()
-            .chain(idle.clone().take(20))
-            .chain(prep.clone().take(1))
-            .chain(tap.take(15))
-            .chain(prep.take(5))
-            .chain(idle.take(10));
-
-        for frame in anim {
-            std::thread::sleep_ms(200);
-            println!("\x1B[41A");
-        }
-    */
+    print_slice_as_c_array("BASE_TO_TAP1", &compress(&diff(&base, &TAP1)));
+    print_slice_as_c_array("BASE_TO_TAP2", &compress(&diff(&base, &TAP2)));
 }
-
-/*
-real = 636*8 = 5088
-
-132*64 = 8448
-128*64 = 8192
-*/
