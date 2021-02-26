@@ -36,7 +36,7 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
         let nb = iter
             .clone()
             .enumerate()
-            .take_while(|(i, &b)| i < &0b0111_1111 && b == base)
+            .take_while(|(i, &b)| i < &0b0111_1110 && b == base)
             .count();
         (0..nb).for_each(|_| {
             iter.next();
@@ -57,7 +57,7 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
             let nb = intermediate
                 .clone()
                 .enumerate()
-                .take_while(|(i, b)| i < &0b0111_1111 && b[0] == 1)
+                .take_while(|(i, b)| i < &0b0111_1110 && b[0] == 1)
                 .count();
 
             // we set the mode bit
@@ -95,6 +95,35 @@ pub fn uncompress(data: &[u8]) -> Vec<u8> {
     res
 }
 
+pub fn uncompress2(data: &[u8], output: &mut [u8]) {
+    let mut current_pos_in_output = 0;
+
+    let mut i = 0;
+    while i < data.len() {
+        let byte = data[i];
+        let mode = byte >> 7;
+        let n = byte & 0b01111111;
+
+        if mode != 0 {
+            for _ in (0..n) {
+                i += 1;
+                output[current_pos_in_output] = data[i];
+                current_pos_in_output += 1;
+            }
+        } else {
+            i += 1;
+            let next = data[i];
+
+            for _ in (0..n) {
+                output[current_pos_in_output] = next;
+                current_pos_in_output += 1;
+            }
+        }
+
+        i += 1;
+    }
+}
+
 /// return a vec representing the diff between two vectors
 pub fn diff(base: &[u8], other: &[u8]) -> Vec<u8> {
     base.iter()
@@ -103,13 +132,11 @@ pub fn diff(base: &[u8], other: &[u8]) -> Vec<u8> {
         .collect()
 }
 
-/// uncompress and diff at the same time limiting the number of allocation to only the final vector
-pub fn uncompress_diff(current: &[u8], next: &[u8]) -> Vec<u8> {
-    current
-        .iter()
-        .zip(next)
-        .map(|(base, &other)| base.wrapping_sub(other))
-        .collect()
+/// undiff two vecs
+pub fn undiff(base: &[u8], other: &mut [u8]) {
+    for i in (0..base.len()) {
+        other[i] = base[i].wrapping_sub(other[i]);
+    }
 }
 
 pub fn print_slice_as_c_array(varname: &str, v: &[u8]) {
@@ -127,6 +154,23 @@ pub fn print_slice_as_c_array(varname: &str, v: &[u8]) {
     }
 
     println!("{}\n}};", v.last().unwrap());
+}
+
+pub fn print_slice_as_rust_array(varname: &str, v: &[u8]) {
+    println!("const {}: [u8; {}] = [", varname, v.len());
+    let mut col = 0;
+    for index in 0..v.len() - 1 {
+        let tmp = format!("{}, ", v[index]);
+        col += tmp.len();
+        if col < 80 {
+            print!("{}", tmp);
+        } else {
+            col = tmp.len();
+            print!("\n{}", tmp);
+        }
+    }
+
+    println!("{}\n];", v.last().unwrap());
 }
 
 #[cfg(test)]
@@ -197,8 +241,45 @@ mod tests {
         15, 0, 15, 2, 5, 8,
     ];
 
+    const TEST_FRAME2: [u8; 636] = [
+        0, 0, 126, 126, 24, 60, 102, 66, 0, 12, 28, 112, 112, 28, 12, 0, 116, 116, 20, 20, 124,
+        104, 0, 124, 124, 0, 112, 120, 44, 36, 124, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 128, 128, 0, 0, 0, 0, 0, 128, 64, 64, 32, 32, 32, 32, 16, 16, 16, 16, 8, 4,
+        2, 1, 1, 2, 12, 48, 64, 128, 0, 0, 0, 0, 0, 0, 0, 248, 248, 248, 248, 0, 0, 0, 0, 0, 128,
+        128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        128, 128, 128, 0, 0, 0, 0, 192, 96, 48, 24, 12, 132, 198, 98, 35, 51, 17, 145, 113, 241,
+        113, 145, 17, 51, 35, 98, 198, 132, 12, 24, 48, 96, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 30, 225, 0, 0, 1, 1, 2, 2, 129, 128, 128, 0, 0, 128, 128, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 128, 0, 48, 48, 0, 0, 1, 1, 2, 4, 8, 16, 32, 67, 135, 7, 1, 0, 184, 188,
+        190, 159, 95, 95, 79, 76, 32, 32, 32, 32, 16, 16, 16, 16, 8, 8, 8, 8, 8, 196, 4, 196, 4,
+        196, 2, 194, 2, 194, 1, 1, 1, 1, 0, 0, 0, 0, 0, 252, 15, 1, 0, 248, 14, 31, 109, 140, 148,
+        148, 164, 166, 249, 224, 255, 224, 249, 166, 164, 148, 148, 140, 109, 31, 14, 248, 0, 1,
+        15, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 112, 12, 3, 0, 0, 24, 6, 5, 152,
+        153, 132, 67, 124, 65, 65, 64, 64, 32, 33, 34, 18, 17, 17, 17, 9, 8, 8, 8, 8, 4, 4, 8, 8,
+        16, 16, 16, 16, 16, 17, 15, 1, 61, 124, 252, 252, 252, 252, 252, 60, 12, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 170, 170, 255, 255, 195, 191, 127, 3, 127, 191, 195, 255, 255, 170, 170, 0, 0,
+        0, 0, 0, 0, 31, 120, 192, 0, 15, 56, 124, 219, 152, 20, 20, 18, 50, 207, 3, 255, 3, 207,
+        50, 18, 20, 20, 152, 219, 124, 56, 15, 0, 192, 120, 63, 16, 16, 16, 16, 8, 8, 8, 8, 8, 4,
+        4, 4, 4, 4, 2, 3, 2, 2, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 2, 130, 135, 31, 7, 159, 7, 28, 7, 159, 7, 159, 7, 2, 130, 0, 0, 0, 0,
+        32, 16, 16, 16, 17, 11, 14, 12, 24, 16, 49, 35, 98, 102, 68, 68, 71, 71, 71, 68, 68, 102,
+        98, 35, 49, 16, 24, 12, 6, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7,
+        8, 8, 23, 0, 15, 1, 2, 1, 15, 0, 15, 2, 5, 8,
+    ];
+
     #[test]
     fn test_compress_uncompress() {
         assert_eq!(uncompress(&compress(&TEST_FRAME)), &TEST_FRAME);
+    }
+
+    #[test]
+    fn test_diff_undiff() {
+        assert_eq!(
+            &undiff(&diff(&TEST_FRAME, &TEST_FRAME2), &TEST_FRAME2),
+            &TEST_FRAME
+        );
     }
 }

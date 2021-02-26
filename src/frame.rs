@@ -37,6 +37,33 @@ impl Frame {
         Ok(Self { frame: internal })
     }
 
+    pub fn height(&self) -> usize {
+        self.frame.len()
+    }
+
+    pub fn create_from_file(filename: &str) -> Result<Self, Box<dyn std::error::Error>> {
+        let file = std::fs::read(filename)?;
+        let mut frame: Vec<Vec<u8>> = file[..file.len() - 1]
+            .split(|&b| b == b'\n')
+            .map(|line| {
+                line.iter()
+                    .map(|b| match b {
+                        b'.' => 0,
+                        b'#' => 1,
+                        _ => panic!("lala"),
+                    })
+                    .collect::<Vec<u8>>()
+            })
+            .collect();
+
+        // just ensure every line is the same width
+        if frame.windows(2).any(|v| v[0].len() != v[1].len()) {
+            return Err("All the frame needs to be the same width".into());
+        } else {
+            Ok(Self { frame })
+        }
+    }
+
     pub fn print(&self) {
         for line in self.frame.iter() {
             for c in line {
@@ -81,6 +108,22 @@ impl Frame {
 
     pub fn compress(&self) -> Vec<u8> {
         crate::compress(&self.output())
+    }
+}
+
+impl std::fmt::Display for Frame {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for line in self.frame.iter() {
+            for c in line {
+                match c {
+                    0 => write!(f, "  ")?,
+                    1 => write!(f, "██")?,
+                    _ => write!(f, "NO")?,
+                }
+            }
+            writeln!(f)?;
+        }
+        Ok(())
     }
 }
 

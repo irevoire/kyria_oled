@@ -198,10 +198,7 @@ use kyria_oled::*;
 fn main() {
     let base = IDLE4;
 
-    println!(
-        "static char PROGMEM CURRENT_FRAME[{}] = {{ 0 }};",
-        base.len()
-    );
+    println!("static char CURRENT_FRAME[{}] = {{ 0 }};", base.len());
 
     print_slice_as_c_array("BASE_FRAME", &base);
     println!("#define IDLE4 BASE_FRAME");

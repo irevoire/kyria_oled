@@ -217,6 +217,9 @@ fn main() {
     let width = 128;
     let height = 40;
 
+    print_slice_as_c_array("BASE_TO_IDLE1", &diff(&IDLE4, &IDLE1));
+
+    /*
     let frame = &[
         ("idle1", IDLE1),
         ("idle2", IDLE2),
@@ -251,6 +254,7 @@ fn main() {
 
         println!("{} total used bytes with the base frame {}", total, name);
     }
+    */
 
     /*
     print_slice_as_c_array("BASE_FRAME", &IDLE1);
