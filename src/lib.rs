@@ -105,7 +105,7 @@ pub fn uncompress2(data: &[u8], output: &mut [u8]) {
         let n = byte & 0b01111111;
 
         if mode != 0 {
-            for _ in (0..n) {
+            for _ in 0..n {
                 i += 1;
                 output[current_pos_in_output] = data[i];
                 current_pos_in_output += 1;
@@ -114,7 +114,7 @@ pub fn uncompress2(data: &[u8], output: &mut [u8]) {
             i += 1;
             let next = data[i];
 
-            for _ in (0..n) {
+            for _ in 0..n {
                 output[current_pos_in_output] = next;
                 current_pos_in_output += 1;
             }
@@ -134,7 +134,7 @@ pub fn diff(base: &[u8], other: &[u8]) -> Vec<u8> {
 
 /// undiff two vecs
 pub fn undiff(base: &[u8], other: &mut [u8]) {
-    for i in (0..base.len()) {
+    for i in 0..base.len() {
         other[i] = base[i].wrapping_sub(other[i]);
     }
 }

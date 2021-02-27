@@ -1,3 +1,6 @@
+#![allow(unused_variables)]
+#![allow(non_snake_case)]
+
 /// this frame is supposed to be repeated twice when cycling on the animation
 const IDLE1: [u8; 636] = [
     0, 0, 126, 126, 24, 60, 102, 66, 0, 12, 28, 112, 112, 28, 12, 0, 116, 116, 20, 20, 124, 104, 0,

@@ -1,7 +1,7 @@
 use kyria_oled::Frame;
 use std::env::args;
 use std::io::{stdin, stdout, Write};
-use termion::event::{Event, Key, MouseEvent};
+use termion::event::{Event, Key};
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 
@@ -30,7 +30,8 @@ fn main() {
             "{}{}",
             format!("{}", frame).replace("\n", "\n\r"),
             termion::cursor::Up(frame.height() as u16 + 1),
-        );
+        )
+        .unwrap();
 
         loop {
             match evt.next().unwrap().unwrap() {

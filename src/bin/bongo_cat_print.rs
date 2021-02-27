@@ -1,3 +1,5 @@
+#![allow(unused_variables)]
+#![allow(non_snake_case)]
 use kyria_oled::*;
 
 const BASE_FRAME: [u8; 636] = [
@@ -45,11 +47,6 @@ const BASE_TO_IDLE5: [u8; 29] = [
     51, 0, 2, 128, 17, 0, 130, 252, 254, 2, 255, 131, 0, 8, 248, 100, 0, 129, 2, 5, 255, 127, 0,
     127, 0, 127, 0, 72, 0,
 ];
-const BASE_TO_PREP: [u8; 62] = [
-    127, 0, 58, 0, 3, 128, 18, 0, 2, 192, 137, 224, 168, 254, 255, 223, 235, 63, 246, 132, 93, 0,
-    137, 232, 250, 251, 104, 103, 136, 73, 144, 204, 2, 192, 130, 0, 128, 13, 0, 2, 4, 2, 12, 3,
-    14, 130, 16, 14, 96, 0, 2, 2, 2, 4, 5, 8, 129, 7, 127, 0, 58, 0,
-];
 const BASE_TO_TAP1: [u8; 84] = [
     86, 0, 4, 8, 5, 0, 2, 128, 88, 0, 3, 128, 18, 0, 4, 192, 4, 0, 129, 253, 2, 249, 133, 255, 0,
     200, 196, 194, 3, 225, 130, 241, 244, 83, 0, 137, 232, 250, 251, 104, 103, 136, 201, 144, 204,
@@ -85,18 +82,16 @@ fn main() {
     let tap: Vec<&[u8]> = vec![&BASE_TO_TAP1, &BASE_TO_TAP2];
     let tap = tap.iter().cycle();
 
-    let prep = std::iter::repeat((&BASE_TO_PREP) as &[u8]);
-
     for idle in idle.take(10) {
         setup_current_frame(&mut CURRENT_FRAME, &idle);
         Frame::new(width, height, &CURRENT_FRAME).unwrap().print();
-        std::thread::sleep_ms(200);
+        std::thread::sleep(std::time::Duration::from_millis(200));
         println!("\x1B[41A");
     }
     for tap in tap.take(10) {
         setup_current_frame(&mut CURRENT_FRAME, &tap);
         Frame::new(width, height, &CURRENT_FRAME).unwrap().print();
-        std::thread::sleep_ms(200);
+        std::thread::sleep(std::time::Duration::from_millis(200));
         println!("\x1B[41A");
     }
 }

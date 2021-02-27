@@ -54,7 +54,7 @@ impl Frame {
 
     pub fn create_from_file(filename: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let file = std::fs::read(filename)?;
-        let mut frame: Vec<Vec<u8>> = file[..file.len() - 1]
+        let frame: Vec<Vec<u8>> = file[..file.len() - 1]
             .split(|&b| b == b'\n')
             .map(|line| {
                 line.iter()
