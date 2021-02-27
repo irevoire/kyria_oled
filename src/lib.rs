@@ -140,7 +140,7 @@ pub fn undiff(base: &[u8], other: &mut [u8]) {
 }
 
 pub fn print_slice_as_c_array(varname: &str, v: &[u8]) {
-    println!("static const char PROGMEM {}[{}] = {{", varname, v.len());
+    println!("static const uint8_t PROGMEM {}[{}] = {{", varname, v.len());
     let mut col = 0;
     for index in 0..v.len() - 1 {
         let tmp = format!("{}, ", v[index]);
