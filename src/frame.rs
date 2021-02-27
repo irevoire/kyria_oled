@@ -37,8 +37,19 @@ impl Frame {
         Ok(Self { frame: internal })
     }
 
+    /// return the height of the frame
     pub fn height(&self) -> usize {
         self.frame.len()
+    }
+
+    /// return the width of the frame
+    pub fn width(&self) -> usize {
+        self.frame[0].len()
+    }
+
+    /// return the dimensions of the frame in this order: (width, height)
+    pub fn dimensions(&self) -> (usize, usize) {
+        (self.width(), self.height())
     }
 
     pub fn create_from_file(filename: &str) -> Result<Self, Box<dyn std::error::Error>> {
@@ -62,6 +73,42 @@ impl Frame {
         } else {
             Ok(Self { frame })
         }
+    }
+
+    // generate an optimal frame from other frame
+    // This frame is basically the average of all the other frames
+    pub fn create_from_multiple_frame(
+        frames: Vec<Self>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if frames
+            .windows(2)
+            .any(|v| v[0].dimensions() != v[1].dimensions())
+        {
+            return Err("All the frames need to have the same dimensions!".into());
+        }
+        let width = frames[0].width();
+        let height = frames[0].height();
+
+        let mut v = vec![vec![0; width]; height];
+        for frame in &frames {
+            for y in 0..height {
+                for x in 0..width {
+                    v[y][x] += frame.frame[y][x];
+                }
+            }
+        }
+
+        for y in 0..height {
+            for x in 0..width {
+                if v[y][x] > frames.len() as u8 / 2 {
+                    v[y][x] = 1;
+                } else {
+                    v[y][x] = 0;
+                }
+            }
+        }
+
+        Ok(Self { frame: v })
     }
 
     pub fn print(&self) {
