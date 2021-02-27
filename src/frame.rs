@@ -98,7 +98,7 @@ impl Frame {
 
         for y in 0..height {
             for x in 0..width {
-                if v[y][x] > frames.len() as u8 / 2 {
+                if v[y][x] >= frames.len() as u8 / 2 {
                     v[y][x] = 1;
                 } else {
                     v[y][x] = 0;
