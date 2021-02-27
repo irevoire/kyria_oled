@@ -77,9 +77,7 @@ impl Frame {
 
     // generate an optimal frame from other frame
     // This frame is basically the average of all the other frames
-    pub fn create_from_multiple_frame(
-        frames: Vec<Self>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn create_from_multiple_frame(frames: &[Self]) -> Result<Self, Box<dyn std::error::Error>> {
         if frames
             .windows(2)
             .any(|v| v[0].dimensions() != v[1].dimensions())
@@ -90,7 +88,7 @@ impl Frame {
         let height = frames[0].height();
 
         let mut v = vec![vec![0; width]; height];
-        for frame in &frames {
+        for frame in frames {
             for y in 0..height {
                 for x in 0..width {
                     v[y][x] += frame.frame[y][x];
