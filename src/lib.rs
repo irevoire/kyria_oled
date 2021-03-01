@@ -26,7 +26,7 @@ pub use frame::Frame;
 /// give us: [4, 1].
 ///
 /// Though, if you want to compresse [1, 2, 3, 4], the second mode is the best and will be give us:
-/// [0
+/// [4, 1, 2, 3, 4]
 pub fn compress(data: &[u8]) -> Vec<u8> {
     let mut iter = data.iter();
     let mut intermediate = Vec::new();
