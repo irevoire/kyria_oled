@@ -78,6 +78,7 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
     res
 }
 
+/// uncompress a frame, this method mostly exists for testing purpose
 pub fn uncompress(data: &[u8]) -> Vec<u8> {
     let mut iter = data.iter().copied();
     let mut res = Vec::new();
@@ -95,6 +96,7 @@ pub fn uncompress(data: &[u8]) -> Vec<u8> {
     res
 }
 
+/// uncompress a frame, this method mostly exists for testing purpose
 pub fn uncompress2(data: &[u8], output: &mut [u8]) {
     let mut current_pos_in_output = 0;
 
@@ -132,13 +134,15 @@ pub fn diff(base: &[u8], other: &[u8]) -> Vec<u8> {
         .collect()
 }
 
-/// undiff two vecs
+/// undiff two vecs wrote in a C way, it does the same thing as the diff method
 pub fn undiff(base: &[u8], other: &mut [u8]) {
     for i in 0..base.len() {
         other[i] = base[i].wrapping_sub(other[i]);
     }
 }
 
+/// print a rust slice as a C array.
+/// `varname` is the name of the array and `v` the slice
 pub fn print_slice_as_c_array(varname: &str, v: &[u8]) {
     println!("static const uint8_t PROGMEM {}[{}] = {{", varname, v.len());
     let mut col = 0;
@@ -156,6 +160,8 @@ pub fn print_slice_as_c_array(varname: &str, v: &[u8]) {
     println!("{}\n}};", v.last().unwrap());
 }
 
+/// print a rust slice as a rust array.
+/// `varname` is the name of the array and `v` the slice
 pub fn print_slice_as_rust_array(varname: &str, v: &[u8]) {
     println!("const {}: [u8; {}] = [", varname, v.len());
     let mut col = 0;
@@ -273,13 +279,5 @@ mod tests {
     #[test]
     fn test_compress_uncompress() {
         assert_eq!(uncompress(&compress(&TEST_FRAME)), &TEST_FRAME);
-    }
-
-    #[test]
-    fn test_diff_undiff() {
-        assert_eq!(
-            &undiff(&diff(&TEST_FRAME, &TEST_FRAME2), &TEST_FRAME2),
-            &TEST_FRAME
-        );
     }
 }

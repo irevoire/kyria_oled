@@ -3,6 +3,9 @@ pub struct Frame {
 }
 
 impl Frame {
+    /// create a frame from a width, height and an array of bytes
+    /// I used this method to extract the bongo cat animation initially from the C array
+    /// If you are creating your own animation you probably want to use the `create_from_file` method
     pub fn new(
         width: usize,
         height: usize,
@@ -52,6 +55,7 @@ impl Frame {
         (self.width(), self.height())
     }
 
+    /// create a frame from a file, see the examples in the bongo_cat directory
     pub fn create_from_file(filename: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let file = std::fs::read(filename)?;
         let frame: Vec<Vec<u8>> = file[..file.len() - 1]
@@ -75,7 +79,7 @@ impl Frame {
         }
     }
 
-    // Generate the average of all the frame, probably useless actually
+    /// Generate the average of all the frame, probably useless actually
     pub fn create_from_multiple_frame(frames: &[Self]) -> Result<Self, Box<dyn std::error::Error>> {
         if frames
             .windows(2)
@@ -108,6 +112,7 @@ impl Frame {
         Ok(Self { frame: v })
     }
 
+    /// display a frame on the screen
     pub fn print(&self) {
         for line in self.frame.iter() {
             for c in line {
@@ -121,6 +126,8 @@ impl Frame {
         }
     }
 
+    /// output a frame as an array of bytes, this format can be provided to an OLED screen to be
+    /// displayed
     pub fn output(&self) -> Vec<u8> {
         let width = self.frame[0].len();
         let height = self.frame.len();
@@ -150,12 +157,14 @@ impl Frame {
         res
     }
 
+    /// output the result of a compressed frame
     pub fn compress(&self) -> Vec<u8> {
         crate::compress(&self.output())
     }
 }
 
 impl std::fmt::Display for Frame {
+    /// display a frame
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for line in self.frame.iter() {
             for c in line {
