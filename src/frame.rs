@@ -75,8 +75,7 @@ impl Frame {
         }
     }
 
-    // generate an optimal frame from other frame
-    // This frame is basically the average of all the other frames
+    // Generate the average of all the frame, probably useless actually
     pub fn create_from_multiple_frame(frames: &[Self]) -> Result<Self, Box<dyn std::error::Error>> {
         if frames
             .windows(2)
