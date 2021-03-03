@@ -9,7 +9,8 @@ fn main() {
         .map(|frame| frame.output())
         .collect();
 
-    let base_frame = find_optimal_base_frame(&frames);
+    let base_frame = find_suboptimal_base_frame(&frames);
+    // let base_frame = frames[3].clone();
 
     let mut total_size = base_frame.len();
 

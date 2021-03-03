@@ -13,6 +13,6 @@ fn main() {
 
     println!(
         "{}",
-        Frame::new(width, height, &find_optimal_base_frame(&frames)).unwrap()
+        Frame::new(width, height, &find_suboptimal_base_frame(&frames)).unwrap()
     );
 }
