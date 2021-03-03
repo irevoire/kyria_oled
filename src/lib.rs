@@ -1,5 +1,8 @@
+pub mod base_frame;
 pub mod frame;
 pub use frame::Frame;
+
+use std::collections::HashMap;
 
 /// compress a slice of `u8`.
 ///
@@ -141,6 +144,11 @@ pub fn undiff(base: &[u8], other: &mut [u8]) {
     }
 }
 
+/// generate a ready-to-use frame from a base frame and a frame
+pub fn generate_from_base(base: &[u8], other: &[u8]) -> Vec<u8> {
+    compress(&diff(&base, &other))
+}
+
 /// print a rust slice as a C array.
 /// `varname` is the name of the array and `v` the slice
 pub fn print_slice_as_c_array(varname: &str, v: &[u8]) {
@@ -177,6 +185,26 @@ pub fn print_slice_as_rust_array(varname: &str, v: &[u8]) {
     }
 
     println!("{}\n];", v.last().unwrap());
+}
+
+pub fn find_suboptimal_base_frame(frames: &[Vec<u8>]) -> Vec<u8> {
+    (0..frames[0].len())
+        .map(|idx| {
+            frames
+                .iter()
+                .map(|frame| frame[idx])
+                .fold(HashMap::new(), |map, el| {
+                    let mut map = map.clone();
+                    *map.entry(el).or_insert(0) += 1;
+                    map
+                })
+                .iter()
+                .max_by_key(|(_value, occurences)| *occurences)
+                .unwrap()
+                .0
+                .clone()
+        })
+        .collect()
 }
 
 #[cfg(test)]

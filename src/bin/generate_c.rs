@@ -3,13 +3,13 @@ use std::path::Path;
 
 fn main() {
     let filenames: Vec<String> = std::env::args().skip(1).collect();
-    let frames: Vec<Frame> = filenames
+    let frames: Vec<Vec<u8>> = filenames
         .iter()
         .map(|filename| Frame::create_from_file(&filename).unwrap())
+        .map(|frame| frame.output())
         .collect();
 
-    let base_frame = Frame::create_from_multiple_frame(&frames).unwrap().output();
-    let frames: Vec<Vec<u8>> = frames.iter().map(|frame| frame.output()).collect();
+    let base_frame = find_optimal_base_frame(&frames);
 
     let mut total_size = base_frame.len();
 
